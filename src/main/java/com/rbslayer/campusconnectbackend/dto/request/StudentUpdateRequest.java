@@ -21,8 +21,9 @@ public class StudentUpdateRequest {
     @NotBlank
     private String college;
 
-    @NotNull
-    @Min(2000)
-    @Max(2100)
+    @NotNull(message = "Graduation year is required")
+    @Min(value = 2000, message = "Graduation year must be >= 2000")
+    @Max(value = 2100, message = "Graduation year must be <= 2100")
     private Integer graduationYear;
+
 }

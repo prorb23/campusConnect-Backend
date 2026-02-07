@@ -19,7 +19,7 @@ public class StudentCreateRequest {
 
     @NotBlank(message = "Phone number is required")
     @Pattern(
-            regexp = "^[6-9]\\\\d{9}$",
+            regexp = "^[6-9]\\d{9}$",
             message = "Phone number must be a valid 10 digit indian number"
     )
     private String phone;
@@ -27,8 +27,9 @@ public class StudentCreateRequest {
     @NotBlank(message = "College name is required")
     private String college;
 
-    @NotBlank(message = "Graduation year is required")
-    @Min(2000)
-    @Max(2100)
+    @NotNull(message = "Graduation year is required")
+    @Min(value = 2000, message = "Graduation year must be >= 2000")
+    @Max(value = 2100, message = "Graduation year must be <= 2100")
     private Integer graduationYear;
+
 }
