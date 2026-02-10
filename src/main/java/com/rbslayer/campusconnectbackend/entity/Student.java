@@ -44,6 +44,10 @@ public class Student {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @PrePersist
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
