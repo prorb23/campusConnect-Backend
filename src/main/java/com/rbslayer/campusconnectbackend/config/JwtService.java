@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Service
 public class JwtService {
-    private static final String SECRET_KEY ="vbRIJ45CHa_rOPWu6i2kzHUAvcp9A305QHjAm4rB4RQ";
+    private static final String SECRET_KEY ="c3VwZXJTZWNyZXRLZXlGb3JKV1RFeGFtcGxlMTIzNDU2Nzg5MA==";
 
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
@@ -38,7 +38,7 @@ public class JwtService {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
-                .signWith(getSigninKey(), SignatureAlgorithm.ES256)
+                .signWith(getSigninKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 

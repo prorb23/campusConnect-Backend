@@ -1,5 +1,6 @@
 package com.rbslayer.campusconnectbackend.service.impl;
 
+import com.rbslayer.campusconnectbackend.config.JwtService;
 import com.rbslayer.campusconnectbackend.dto.auth.request.LoginRequest;
 import com.rbslayer.campusconnectbackend.dto.auth.request.RegisterRequest;
 import com.rbslayer.campusconnectbackend.dto.auth.response.AuthResponse;
@@ -9,22 +10,26 @@ import com.rbslayer.campusconnectbackend.repository.UserRepository;
 import com.rbslayer.campusconnectbackend.service.AuthService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl implements AuthService {
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
-    private AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     public AuthServiceImpl(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
-            AuthenticationManager authenticationManager) {
+            AuthenticationManager authenticationManager,
+            JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -38,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
         user.setRole(Role.ROLE_STUDENT);
 
         userRepository.save(user);
-        return null;
+        return new AuthResponse("User Registered Successfully");
     }
 
     @Override
@@ -49,6 +54,13 @@ public class AuthServiceImpl implements AuthService {
                         request.getPassword()
                 )
         );
-        return new AuthResponse("Login Successful");
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() ->
+                        new UsernameNotFoundException(
+                                "User not found with email: " + request.getEmail()
+                        )
+                );
+        String token = jwtService.generateToken(user);
+        return new AuthResponse(token);
     }
 }
