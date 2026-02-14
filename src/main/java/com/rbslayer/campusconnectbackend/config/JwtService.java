@@ -4,6 +4,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import java.security.Key;
@@ -13,7 +15,11 @@ import java.util.Map;
 
 @Service
 public class JwtService {
-    private static final String SECRET_KEY ="c3VwZXJTZWNyZXRLZXlGb3JKV1RFeGFtcGxlMTIzNDU2Nzg5MA==";
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+
+    @Value("${jwt.expiration}")
+    private long jwtExpiration;
 
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
@@ -37,7 +43,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSigninKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -55,7 +61,14 @@ public class JwtService {
     }
 
     private Key getSigninKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    @PostConstruct
+    public void validateJwtConfig(){
+        if(jwtSecret.length() < 32){
+            throw new IllegalStateException("JWT Secret must be at least 32 characters long");
+        }
     }
 }
