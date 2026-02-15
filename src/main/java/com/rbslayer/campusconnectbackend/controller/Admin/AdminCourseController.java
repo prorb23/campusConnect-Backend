@@ -1,4 +1,4 @@
-package com.rbslayer.campusconnectbackend.controller;
+package com.rbslayer.campusconnectbackend.controller.Admin;
 
 import com.rbslayer.campusconnectbackend.dto.request.CourseCreateRequest;
 import com.rbslayer.campusconnectbackend.dto.response.CourseResponse;

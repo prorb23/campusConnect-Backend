@@ -13,10 +13,6 @@ public class StudentCreateRequest {
     @Size(min = 2, max = 80)
     private String fullName;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Invalid email format")
-    private String email;
-
     @NotBlank(message = "Phone number is required")
     @Pattern(
             regexp = "^[6-9]\\d{9}$",

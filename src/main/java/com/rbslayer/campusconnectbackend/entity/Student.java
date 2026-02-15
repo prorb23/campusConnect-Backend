@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @Table(
         name = "students",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uk_student_email", columnNames = "email"),
                 @UniqueConstraint(name = "uk_student_phone", columnNames = "phone")
         }
 )
@@ -25,9 +24,6 @@ public class Student {
 
     @Column(nullable = false, length = 80)
     private String fullName;
-
-    @Column(nullable = false, length = 120)
-    private String email;
 
     @Column(nullable = false, length = 15)
     private String phone;
