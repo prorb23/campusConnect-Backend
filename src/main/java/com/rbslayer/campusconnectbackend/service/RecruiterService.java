@@ -11,6 +11,8 @@ import com.rbslayer.campusconnectbackend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class RecruiterService {
@@ -68,6 +70,28 @@ public class RecruiterService {
                 req.getLocation()
         );
 
+        return map(recruiter);
+    }
+
+    public List<RecruiterResponse> getAllRecruiters() {
+        return recruiterRepository.findAll()
+                .stream()
+                .map(this::map)
+                .toList();
+    }
+
+    public RecruiterResponse getRecruiterById(Long recruiterId) {
+        Recruiter recruiter =recruiterRepository.findById(recruiterId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Recruiter not found with id : " +recruiterId ));
+        return map(recruiter);
+    }
+
+    public RecruiterResponse verifyRecruiter(Long recruiterId) {
+        Recruiter recruiter = recruiterRepository.findById(recruiterId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Recruiter not found with id : " +recruiterId ));
+        recruiter.verify();
         return map(recruiter);
     }
 

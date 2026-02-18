@@ -9,6 +9,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/recruiters")
 public class RecruiterController {
@@ -44,4 +46,17 @@ public class RecruiterController {
     ) {
         return recruiterService.update(user.getId(), request);
     }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<RecruiterResponse> getAllRecruiters(){
+        return recruiterService.getAllRecruiters();
+    }
+
+    @PutMapping("/{id}/verify")
+    @PreAuthorize("hasRole('ADMIN')")
+    public RecruiterResponse verifyRecruiter(@PathVariable Long id) {
+        return recruiterService.verifyRecruiter(id);
+    }
+
 }
