@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "jobs")
@@ -43,8 +44,8 @@ public class Job {
     @JoinColumn(name = "recruiter_id", nullable = false)
     private Recruiter recruiter;
 
-//    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<JobApplication> applications = new ArrayList<>();
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<JobApplication> applications = new ArrayList<>();
 
 
     public Job(String title, String description, String skillsRequired, String jobType, LocalDate lastDateToApply, Recruiter recruiter) {
